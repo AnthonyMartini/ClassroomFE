@@ -1,6 +1,6 @@
-import React from 'react';
-import { Bell, User, LogOut, Menu, X } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import React from "react";
+import { Bell, LogOut, Menu, X } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -47,7 +47,10 @@ const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
             </div>
             <div className="relative">
               <img
-                src={user?.avatar || 'https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=400'}
+                src={
+                  user?.avatar ||
+                  "https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg?auto=compress&cs=tinysrgb&w=400"
+                }
                 alt={user?.name}
                 className="w-8 h-8 rounded-full object-cover"
               />

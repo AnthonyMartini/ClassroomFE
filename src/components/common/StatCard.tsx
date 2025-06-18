@@ -1,10 +1,12 @@
+import { LucideProps } from "lucide-react";
 import React from "react";
-import { DivideIcon as LucideIcon } from "lucide-react";
 
 interface StatCardProps {
   title: string;
   value: string | number;
-  icon: LucideIcon;
+  icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+  >;
   trend?: {
     value: number;
     isPositive: boolean;
