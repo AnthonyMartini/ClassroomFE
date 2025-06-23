@@ -1,51 +1,51 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import React, { useState } from "react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
 interface Event {
   id: string;
   title: string;
   date: string;
   time: string;
-  type: 'class' | 'exam' | 'meeting' | 'holiday';
+  type: "class" | "exam" | "meeting" | "holiday";
   description?: string;
 }
 
 const CalendarPage: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [, setSelectedDate] = useState<Date | null>(null);
 
   const events: Event[] = [
     {
-      id: '1',
-      title: 'Mathematics Exam',
-      date: '2024-01-20',
-      time: '9:00 AM',
-      type: 'exam',
-      description: 'Mid-term examination for 10th grade'
+      id: "1",
+      title: "Mathematics Exam",
+      date: "2024-01-20",
+      time: "9:00 AM",
+      type: "exam",
+      description: "Mid-term examination for 10th grade",
     },
     {
-      id: '2',
-      title: 'Parent-Teacher Meeting',
-      date: '2024-01-22',
-      time: '2:00 PM',
-      type: 'meeting',
-      description: 'Quarterly parent-teacher conference'
+      id: "2",
+      title: "Parent-Teacher Meeting",
+      date: "2024-01-22",
+      time: "2:00 PM",
+      type: "meeting",
+      description: "Quarterly parent-teacher conference",
     },
     {
-      id: '3',
-      title: 'Chemistry Lab',
-      date: '2024-01-25',
-      time: '10:30 AM',
-      type: 'class',
-      description: 'Organic chemistry laboratory session'
+      id: "3",
+      title: "Chemistry Lab",
+      date: "2024-01-25",
+      time: "10:30 AM",
+      type: "class",
+      description: "Organic chemistry laboratory session",
     },
     {
-      id: '4',
-      title: 'Winter Break',
-      date: '2024-01-30',
-      time: 'All Day',
-      type: 'holiday',
-      description: 'School closed for winter break'
+      id: "4",
+      title: "Winter Break",
+      date: "2024-01-30",
+      time: "All Day",
+      type: "holiday",
+      description: "School closed for winter break",
     },
   ];
 
@@ -58,14 +58,14 @@ const CalendarPage: React.FC = () => {
   };
 
   const getEventsForDate = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
-    return events.filter(event => event.date === dateStr);
+    const dateStr = date.toISOString().split("T")[0];
+    return events.filter((event) => event.date === dateStr);
   };
 
-  const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentDate(prev => {
+  const navigateMonth = (direction: "prev" | "next") => {
+    setCurrentDate((prev) => {
       const newDate = new Date(prev);
-      if (direction === 'prev') {
+      if (direction === "prev") {
         newDate.setMonth(prev.getMonth() - 1);
       } else {
         newDate.setMonth(prev.getMonth() + 1);
@@ -81,12 +81,18 @@ const CalendarPage: React.FC = () => {
 
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="h-24 border border-gray-200"></div>);
+      days.push(
+        <div key={`empty-${i}`} className="h-24 border border-gray-200"></div>
+      );
     }
 
     // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      const date = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        day
+      );
       const dayEvents = getEventsForDate(date);
       const isToday = date.toDateString() === new Date().toDateString();
 
@@ -94,29 +100,38 @@ const CalendarPage: React.FC = () => {
         <div
           key={day}
           className={`h-24 border border-gray-200 p-1 cursor-pointer hover:bg-gray-50 ${
-            isToday ? 'bg-blue-50 border-blue-200' : ''
+            isToday ? "bg-blue-50 border-blue-200" : ""
           }`}
           onClick={() => setSelectedDate(date)}
         >
-          <div className={`text-sm font-medium ${isToday ? 'text-blue-600' : 'text-gray-900'}`}>
+          <div
+            className={`text-sm font-medium ${
+              isToday ? "text-blue-600" : "text-gray-900"
+            }`}
+          >
             {day}
           </div>
           <div className="mt-1 space-y-1">
-            {dayEvents.slice(0, 2).map(event => (
+            {dayEvents.slice(0, 2).map((event) => (
               <div
                 key={event.id}
                 className={`text-xs p-1 rounded truncate ${
-                  event.type === 'exam' ? 'bg-red-100 text-red-800' :
-                  event.type === 'meeting' ? 'bg-blue-100 text-blue-800' :
-                  event.type === 'holiday' ? 'bg-purple-100 text-purple-800' :
-                  'bg-green-100 text-green-800'
+                  event.type === "exam"
+                    ? "bg-red-100 text-red-800"
+                    : event.type === "meeting"
+                    ? "bg-blue-100 text-blue-800"
+                    : event.type === "holiday"
+                    ? "bg-purple-100 text-purple-800"
+                    : "bg-green-100 text-green-800"
                 }`}
               >
                 {event.title}
               </div>
             ))}
             {dayEvents.length > 2 && (
-              <div className="text-xs text-gray-500">+{dayEvents.length - 2} more</div>
+              <div className="text-xs text-gray-500">
+                +{dayEvents.length - 2} more
+              </div>
             )}
           </div>
         </div>
@@ -127,11 +142,21 @@ const CalendarPage: React.FC = () => {
   };
 
   const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
     <div className="space-y-6">
@@ -155,13 +180,13 @@ const CalendarPage: React.FC = () => {
               </h2>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => navigateMonth('prev')}
+                  onClick={() => navigateMonth("prev")}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <button
-                  onClick={() => navigateMonth('next')}
+                  onClick={() => navigateMonth("next")}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <ChevronRight size={20} />
@@ -171,8 +196,11 @@ const CalendarPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-7 gap-0">
-            {dayNames.map(day => (
-              <div key={day} className="p-3 text-center text-sm font-medium text-gray-500 bg-gray-50 border border-gray-200">
+            {dayNames.map((day) => (
+              <div
+                key={day}
+                className="p-3 text-center text-sm font-medium text-gray-500 bg-gray-50 border border-gray-200"
+              >
                 {day}
               </div>
             ))}
@@ -182,21 +210,37 @@ const CalendarPage: React.FC = () => {
 
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Events</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Upcoming Events
+            </h3>
             <div className="space-y-3">
-              {events.slice(0, 5).map(event => (
-                <div key={event.id} className="flex items-start space-x-3 p-3 border border-gray-200 rounded-lg">
-                  <div className={`w-3 h-3 rounded-full mt-1 ${
-                    event.type === 'exam' ? 'bg-red-500' :
-                    event.type === 'meeting' ? 'bg-blue-500' :
-                    event.type === 'holiday' ? 'bg-purple-500' :
-                    'bg-green-500'
-                  }`}></div>
+              {events.slice(0, 5).map((event) => (
+                <div
+                  key={event.id}
+                  className="flex items-start space-x-3 p-3 border border-gray-200 rounded-lg"
+                >
+                  <div
+                    className={`w-3 h-3 rounded-full mt-1 ${
+                      event.type === "exam"
+                        ? "bg-red-500"
+                        : event.type === "meeting"
+                        ? "bg-blue-500"
+                        : event.type === "holiday"
+                        ? "bg-purple-500"
+                        : "bg-green-500"
+                    }`}
+                  ></div>
                   <div className="flex-1">
-                    <div className="font-medium text-gray-900">{event.title}</div>
-                    <div className="text-sm text-gray-500">{event.date} at {event.time}</div>
+                    <div className="font-medium text-gray-900">
+                      {event.title}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {event.date} at {event.time}
+                    </div>
                     {event.description && (
-                      <div className="text-xs text-gray-400 mt-1">{event.description}</div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        {event.description}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -205,7 +249,9 @@ const CalendarPage: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Event Types</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Event Types
+            </h3>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
