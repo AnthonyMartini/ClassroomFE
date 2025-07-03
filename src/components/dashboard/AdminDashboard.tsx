@@ -9,69 +9,28 @@ const AdminDashboard: React.FC = () => {
       title: "Total Students",
       value: "1,234",
       icon: Users,
-      trend: { value: 8.2, isPositive: true },
-      color: "blue" as const,
+      color: "green" as const,
     },
     {
       title: "Active Teachers",
       value: "87",
       icon: GraduationCap,
-      trend: { value: 3.1, isPositive: true },
+
       color: "green" as const,
     },
     {
       title: "Total Classes",
       value: "45",
       icon: BookOpen,
-      trend: { value: 12.5, isPositive: true },
       color: "purple" as const,
     },
     {
       title: "Average Grade",
       value: "87.5%",
       icon: TrendingUp,
-      trend: { value: 2.4, isPositive: true },
+
       color: "orange" as const,
     },
-  ];
-
-  const recentStudents = [
-    {
-      id: "S001",
-      name: "Alice Johnson",
-      grade: "10th",
-      class: "A",
-      enrollmentDate: "2024-01-15",
-    },
-    {
-      id: "S002",
-      name: "Bob Smith",
-      grade: "11th",
-      class: "B",
-      enrollmentDate: "2024-01-16",
-    },
-    {
-      id: "S003",
-      name: "Carol Davis",
-      grade: "9th",
-      class: "A",
-      enrollmentDate: "2024-01-17",
-    },
-    {
-      id: "S004",
-      name: "David Wilson",
-      grade: "12th",
-      class: "C",
-      enrollmentDate: "2024-01-18",
-    },
-  ];
-
-  const columns = [
-    { key: "id", label: "Student ID", sortable: true },
-    { key: "name", label: "Name", sortable: true },
-    { key: "grade", label: "Grade", sortable: true },
-    { key: "class", label: "Class", sortable: true },
-    { key: "enrollmentDate", label: "Enrollment Date", sortable: true },
   ];
 
   return (
@@ -83,7 +42,7 @@ const AdminDashboard: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 bg-mi">
         {stats.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
@@ -161,13 +120,6 @@ const AdminDashboard: React.FC = () => {
             ))}
           </div>
         </div>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Recent Enrollments
-        </h3>
-        <DataTable data={recentStudents} columns={columns} />
       </div>
     </div>
   );

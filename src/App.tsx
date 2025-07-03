@@ -51,10 +51,10 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-50">
       <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <div className="flex">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}

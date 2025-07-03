@@ -62,7 +62,7 @@ const StudentDashboard: React.FC = () => {
     { key: "time", label: "Time", sortable: true },
     { key: "subject", label: "Subject", sortable: true },
     { key: "teacher", label: "Teacher", sortable: true },
-    { key: "room", label: "Room", sortable: true },
+    { key: "room", label: "Room" },
   ];
 
   const recentGrades = [

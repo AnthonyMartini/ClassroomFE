@@ -1,2 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --color-success-primary: #13d102;
+  --color-success-secondary: #60d656;
+
+    --color-warning-primary: #d97d02;
+    --color-warning-secondary: #d69f56;
+
+    --color-error-primary: #d90202;
+    --color-error-secondary: #d15252;
+
+
+}
