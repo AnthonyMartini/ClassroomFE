@@ -7,6 +7,7 @@ import {
   Calendar,
   FileText,
   Settings,
+  ShieldCheck,
   BarChart3,
   UserCheck,
   MessageSquare,
@@ -55,12 +56,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         { id: "classes", label: "My Classes", icon: BookOpen },
         { id: "grades", label: "My Grades", icon: FileText },
         { id: "attendance", label: "Attendance", icon: UserCheck },
+        { id: "parent-access", label: "Parent Access", icon: ShieldCheck },
       ],
-      parent: [
-        { id: "children", label: "My Children", icon: Users },
-        { id: "grades", label: "Grades", icon: FileText },
-        { id: "attendance", label: "Attendance", icon: UserCheck },
-      ],
+      parent: [],
     };
 
     return [
@@ -98,20 +96,18 @@ const Sidebar: React.FC<SidebarProps> = ({
                     }}
                     className={`
                       group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full text-left transition-colors
-                      ${
-                        isActive
-                          ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      ${isActive
+                        ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                       }
                     `}
                   >
                     <Icon
                       size={20}
-                      className={`mr-3 ${
-                        isActive
-                          ? "text-white"
-                          : "text-gray-400 group-hover:text-gray-500"
-                      }`}
+                      className={`mr-3 ${isActive
+                        ? "text-white"
+                        : "text-gray-400 group-hover:text-gray-500"
+                        }`}
                     />
                     {item.label}
                   </button>

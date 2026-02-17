@@ -9,6 +9,9 @@ import StudentDashboard from "./components/dashboard/StudentDashboard";
 import ParentDashboard from "./components/dashboard/ParentDashboard";
 import StudentsPage from "./components/pages/StudentsPage";
 import CalendarPage from "./components/pages/CalendarPage";
+import StudentClassesPage from "./components/myClasses/StudentClassesPage";
+import TeacherClassesPage from "./components/myClasses/TeacherClassesPage";
+import ParentAccess from "./components/pages/ParentAccess";
 
 const AppContent: React.FC = () => {
   const { user } = useAuth();
@@ -38,6 +41,21 @@ const AppContent: React.FC = () => {
         return <StudentsPage />;
       case "calendar":
         return <CalendarPage />;
+      case "classes":
+        if (user.role === "student") {
+          return <StudentClassesPage />;
+        }
+        if (user.role === "teacher") {
+          return <TeacherClassesPage />;
+        }
+        return (
+          <div className="text-center py-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
+            <p className="text-gray-600">This view is currently for students and teachers.</p>
+          </div>
+        );
+      case "parent-access":
+        return <ParentAccess />;
       default:
         return (
           <div className="text-center py-12">
@@ -62,7 +80,7 @@ const AppContent: React.FC = () => {
           setActiveTab={setActiveTab}
         />
 
-        <main className="flex-1 p-6 lg:p-8">{renderContent()}</main>
+        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">{renderContent()}</main>
       </div>
     </div>
   );

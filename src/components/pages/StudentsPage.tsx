@@ -72,8 +72,8 @@ const StudentsPage: React.FC = () => {
 
   const filteredStudents = students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.id.toLowerCase().includes(searchTerm.toLowerCase());
+      student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGrade = selectedGrade === 'All' || student.grade === selectedGrade;
     return matchesSearch && matchesGrade;
   });
@@ -84,32 +84,30 @@ const StudentsPage: React.FC = () => {
     { key: 'email', label: 'Email', sortable: true },
     { key: 'grade', label: 'Grade', sortable: true },
     { key: 'class', label: 'Class', sortable: true },
-    { 
-      key: 'gpa', 
-      label: 'GPA', 
+    {
+      key: 'gpa',
+      label: 'GPA',
       sortable: true,
       render: (gpa: number) => (
-        <span className={`font-medium ${
-          gpa >= 3.5 ? 'text-green-600' :
-          gpa >= 3.0 ? 'text-blue-600' :
-          gpa >= 2.5 ? 'text-yellow-600' :
-          'text-red-600'
-        }`}>
+        <span className={`font-medium ${gpa >= 3.5 ? 'text-green-600' :
+            gpa >= 3.0 ? 'text-blue-600' :
+              gpa >= 2.5 ? 'text-yellow-600' :
+                'text-red-600'
+          }`}>
           {gpa.toFixed(2)}
         </span>
       )
     },
-    { 
-      key: 'attendance', 
-      label: 'Attendance', 
+    {
+      key: 'attendance',
+      label: 'Attendance',
       sortable: true,
       render: (attendance: number) => (
-        <span className={`font-medium ${
-          attendance >= 95 ? 'text-green-600' :
-          attendance >= 90 ? 'text-blue-600' :
-          attendance >= 85 ? 'text-yellow-600' :
-          'text-red-600'
-        }`}>
+        <span className={`font-medium ${attendance >= 95 ? 'text-green-600' :
+            attendance >= 90 ? 'text-blue-600' :
+              attendance >= 85 ? 'text-yellow-600' :
+                'text-red-600'
+          }`}>
           {attendance.toFixed(1)}%
         </span>
       )

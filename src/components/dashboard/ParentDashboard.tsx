@@ -1,126 +1,105 @@
-import React from "react";
-import { Users, Calendar, FileText, AlertCircle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Users, Calendar, FileText, AlertCircle, Check } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 import StatCard from "../common/StatCard";
-import DataTable from "../common/DataTable";
 
 const ParentDashboard: React.FC = () => {
+  const { user } = useAuth();
+  const [childrenData, setChildrenData] = useState<any[]>([]);
+  const [selectedChildId, setSelectedChildId] = useState<string>("");
+
+  useEffect(() => {
+    const fetchChildren = async () => {
+      if (!user?.email) return;
+      try {
+        const response = await fetch(`http://localhost:5000/api/parent/children?email=${user.email}`);
+        if (response.ok) {
+          const data = await response.json();
+          setChildrenData(data);
+          if (data.length > 0) {
+            setSelectedChildId(data[0].id);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching children data:", error);
+      }
+    };
+    fetchChildren();
+  }, [user?.email]);
+
+  const selectedChild = childrenData.find((c: any) => c.id === selectedChildId);
+
   const stats = [
-    { title: "Children", value: "2", icon: Users, color: "blue" as const },
+    {
+      title: "Children",
+      value: childrenData.length.toString(),
+      icon: Users,
+      color: "blue" as const,
+      tooltip: (
+        <>
+          {childrenData.map((c: any, i: number) => (
+            <div key={i} className="flex items-center justify-between gap-4">
+              <span className="text-xs font-bold text-gray-600">{c.name}</span>
+              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">{c.grade}</span>
+            </div>
+          ))}
+        </>
+      )
+    },
     {
       title: "Avg. Attendance",
-      value: "95.8%",
+      value: childrenData.length > 0 ? (childrenData.reduce((acc: number, c: any) => acc + parseFloat(c.attendance), 0) / childrenData.length).toFixed(1) + "%" : "0%",
       icon: Calendar,
       color: "green" as const,
+      tooltip: (
+        <>
+          {childrenData.map((c: any, i: number) => (
+            <div key={i} className="flex items-center justify-between gap-4">
+              <span className="text-xs font-bold text-gray-600">{c.name}</span>
+              <span className="text-xs font-black text-green-600">{c.attendance}</span>
+            </div>
+          ))}
+        </>
+      )
     },
     {
       title: "Avg. GPA",
-      value: "3.7",
+      value: childrenData.length > 0 ? (childrenData.reduce((acc: number, c: any) => acc + parseFloat(c.gpa), 0) / childrenData.length).toFixed(2) : "0.00",
       icon: FileText,
       color: "purple" as const,
+      tooltip: (
+        <>
+          {childrenData.map((c: any, i: number) => (
+            <div key={i} className="flex items-center justify-between gap-4">
+              <span className="text-xs font-bold text-gray-600">{c.name}</span>
+              <span className="text-xs font-black text-purple-600">{c.gpa}</span>
+            </div>
+          ))}
+        </>
+      )
     },
     {
       title: "Alerts",
-      value: "1",
+      value: childrenData.reduce((acc: number, c: any) => acc + (c.alerts || 0), 0).toString(),
       icon: AlertCircle,
       color: "orange" as const,
+      tooltip: (
+        <>
+          {childrenData.map((c: any, i: number) => (
+            <div key={i} className="flex items-center justify-between gap-4">
+              <span className="text-xs font-bold text-gray-600">{c.name}</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest ${c.alerts > 0 ? 'text-orange-600' : 'text-gray-400'}`}>
+                {c.alerts} No Alerts
+              </span>
+            </div>
+          ))}
+        </>
+      )
     },
   ];
 
-  const children = [
-    {
-      name: "Emily Smith",
-      grade: "10th Grade",
-      gpa: "3.85",
-      attendance: "96.2%",
-      status: "Good",
-      alerts: 0,
-    },
-    {
-      name: "Michael Smith",
-      grade: "8th Grade",
-      gpa: "3.55",
-      attendance: "95.4%",
-      status: "Needs Attention",
-      alerts: 1,
-    },
-  ];
 
-  const childrenColumns = [
-    { key: "name", label: "Child", sortable: true },
-    { key: "grade", label: "Grade", sortable: true },
-    { key: "gpa", label: "GPA", sortable: true },
-    { key: "attendance", label: "Attendance", sortable: true },
-    {
-      key: "status",
-      label: "Status",
-      render: (status: string) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            status === "Good"
-              ? "bg-green-100 text-green-800"
-              : status === "Needs Attention"
-              ? "bg-yellow-100 text-yellow-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {status}
-        </span>
-      ),
-    },
-    { key: "alerts", label: "Alerts", sortable: true },
-  ];
 
-  const recentActivity = [
-    {
-      child: "Emily Smith",
-      activity: "Submitted Math Assignment",
-      date: "2024-01-18",
-      type: "assignment",
-    },
-    {
-      child: "Michael Smith",
-      activity: "Absent from History Class",
-      date: "2024-01-18",
-      type: "attendance",
-    },
-    {
-      child: "Emily Smith",
-      activity: "Received A+ in Chemistry Quiz",
-      date: "2024-01-17",
-      type: "grade",
-    },
-    {
-      child: "Michael Smith",
-      activity: "Parent-Teacher Conference Scheduled",
-      date: "2024-01-17",
-      type: "meeting",
-    },
-  ];
-
-  const activityColumns = [
-    { key: "child", label: "Child", sortable: true },
-    { key: "activity", label: "Activity", sortable: true },
-    { key: "date", label: "Date", sortable: true },
-    {
-      key: "type",
-      label: "Type",
-      render: (type: string) => (
-        <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            type === "grade"
-              ? "bg-green-100 text-green-800"
-              : type === "assignment"
-              ? "bg-blue-100 text-blue-800"
-              : type === "attendance"
-              ? "bg-yellow-100 text-yellow-800"
-              : "bg-purple-100 text-purple-800"
-          }`}
-        >
-          {type}
-        </span>
-      ),
-    },
-  ];
 
   return (
     <div className="space-y-6">
@@ -137,45 +116,123 @@ const ParentDashboard: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            My Children
-          </h3>
-          <DataTable data={children} columns={childrenColumns} />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+        {/* Student Overview - Main Column */}
+        <div className="lg:col-span-3 space-y-6">
+          <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+
+            <div className="relative z-10">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                  <h3 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+                    <FileText className="text-blue-600" size={24} />
+                    {selectedChild ? `${selectedChild.name} Overview` : "Student Overview"}
+                  </h3>
+                  <p className="text-sm text-gray-500 font-medium tracking-tight opacity-70">Academic performance and course breakdown</p>
+                </div>
+
+                {childrenData.length > 0 && (
+                  <select
+                    value={selectedChildId}
+                    onChange={(e) => setSelectedChildId(e.target.value)}
+                    className="px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition-all outline-none cursor-pointer"
+                  >
+                    {childrenData.map((child: any) => (
+                      <option key={child.id} value={child.id}>{child.name}</option>
+                    ))}
+                  </select>
+                )}
+              </div>
+
+              {selectedChild ? (
+                <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="flex items-center gap-6 mb-8 p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
+                    <div className="text-center border-r border-blue-100 pr-6">
+                      <p className="text-xs font-black text-blue-400 uppercase tracking-widest mb-1">Attendance</p>
+                      <p className="text-2xl font-black text-blue-900">{selectedChild.attendance}</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs font-black text-blue-400 uppercase tracking-widest mb-1">Current GPA</p>
+                      <p className="text-2xl font-black text-blue-900">{selectedChild.gpa}</p>
+                    </div>
+                    <div className="ml-auto flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-blue-100 shadow-sm">
+                      <div className={`w-2 h-2 rounded-full ${selectedChild.status === 'Good' ? 'bg-green-500' : 'bg-amber-500'}`}></div>
+                      <span className="text-xs font-black text-gray-900 uppercase tracking-wider">{selectedChild.status}</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {selectedChild.classes.map((cls: any, cidx: number) => (
+                      <div key={cidx} className="bg-gray-50 p-5 rounded-2xl border border-gray-50 flex justify-between items-center group hover:bg-white hover:shadow-md transition-all duration-300">
+                        <div>
+                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{cls.name}</p>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-2xl font-black text-gray-900">{cls.grade}</span>
+                            <span className="text-xs font-bold text-gray-400">Current Grade</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                          <div className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${parseFloat(cls.grade) >= 90 ? 'bg-green-100 text-green-700' :
+                            parseFloat(cls.grade) >= 80 ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'
+                            }`}>
+                            {parseFloat(cls.grade) >= 90 ? 'Excellent' : parseFloat(cls.grade) >= 80 ? 'Good' : 'Average'}
+                          </div>
+                          <div className="w-12 h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${parseFloat(cls.grade) >= 90 ? 'bg-green-500' : 'bg-amber-500'}`}
+                              style={{ width: cls.grade }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="py-12 text-center text-gray-400 font-medium">Select a child to view details</div>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Current Alerts
-          </h3>
-          <div className="space-y-4">
-            <div className="flex items-start space-x-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
-              <div className="flex-1">
-                <div className="font-medium text-gray-900">
-                  Attendance Alert
+        {/* Sidebar Alerts Section */}
+        <div className="lg:col-span-1 space-y-6">
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+            <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2 tracking-tight">
+              <AlertCircle className="text-amber-500" size={20} />
+              Alerts
+            </h3>
+            <div className="space-y-4">
+              {childrenData.some((c: any) => c.status === "Needs Attention") ? (
+                childrenData.filter((c: any) => c.status === "Needs Attention").map((child: any, idx: number) => (
+                  <div key={idx} className="flex items-start space-x-3 p-4 bg-amber-50 border border-amber-100 rounded-2xl animate-in slide-in-from-right-4 duration-500">
+                    <div className="p-1.5 bg-white rounded-lg shadow-sm shrink-0">
+                      <AlertCircle className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900 text-xs leading-none mb-1">
+                        {child.name}
+                      </div>
+                      <p className="text-[11px] text-amber-800 font-medium leading-tight opacity-80">
+                        Requires attention in current courses.
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Check className="text-gray-300" size={24} />
+                  </div>
+                  <p className="text-gray-400 font-bold text-xs">All Clear</p>
                 </div>
-                <div className="text-sm text-gray-600">
-                  Michael Smith was absent from History class today.
-                </div>
-                <div className="text-xs text-gray-500 mt-1">Jan 18, 2024</div>
-              </div>
-            </div>
-
-            <div className="text-center text-gray-500 text-sm py-4">
-              All other alerts are resolved
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Recent Activity
-        </h3>
-        <DataTable data={recentActivity} columns={activityColumns} />
-      </div>
     </div>
   );
 };
