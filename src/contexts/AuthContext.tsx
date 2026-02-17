@@ -54,7 +54,11 @@ const mockUsers: User[] = [
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Check localStorage on initial state set
+    const savedUser = localStorage.getItem("classroom_user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const login = async (email: string /*password: string*/) => {
@@ -66,6 +70,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const foundUser = mockUsers.find((u) => u.email === email);
       if (foundUser) {
         setUser(foundUser);
+        localStorage.setItem("classroom_user", JSON.stringify(foundUser));
       } else {
         throw new Error("Invalid credentials");
       }
@@ -76,6 +81,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("classroom_user");
   };
 
   return (
