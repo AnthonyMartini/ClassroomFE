@@ -1,7 +1,6 @@
 import React from "react";
 import { Users, GraduationCap, BookOpen, TrendingUp } from "lucide-react";
 import StatCard from "../common/StatCard";
-import DataTable from "../common/DataTable";
 
 const AdminDashboard: React.FC = () => {
   const stats = [

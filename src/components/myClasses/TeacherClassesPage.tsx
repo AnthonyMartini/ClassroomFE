@@ -9,7 +9,6 @@ import {
     BarChart3,
     MoreVertical,
     Search,
-    ChevronRight,
     ArrowRight,
     Mail,
     Filter,
